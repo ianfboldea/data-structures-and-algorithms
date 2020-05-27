@@ -3,6 +3,10 @@
  * Structures and Algorithms in Java, 6th Edition,
  * by Goodrich, Tamassia, and Goldwasser.
  */
+
+import java.util.ArrayList;
+import java.util.List;
+
 public abstract class AbstractTree<T> implements Tree<T> {
   // Initial simple methods
   public boolean isInternal(Position<T> p) { return numChildren(p) > 0; }
@@ -47,7 +51,7 @@ public abstract class AbstractTree<T> implements Tree<T> {
       preorderSubtree(c, snapshot);
   }
   /** Returns an iterable collection of positions of the tree, reported in preorder. */
-  public Iterable<Position<T>> preoder() {
+  public Iterable<Position<T>> preorder() {
     List<Position<T>> snapshot = new ArrayList<>();
     if (!isEmpty())
       preorderSubtree(root(), snapshot);

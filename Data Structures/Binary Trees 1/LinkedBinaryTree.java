@@ -7,6 +7,9 @@
 * @version 1.0
 * @since   May 25, 2020
 */
+
+import java.util.Iterator;
+
 public class LinkedBinaryTree<T> extends AbstractBinaryTree<T> {
   // We create this statically because we do not need to access
   // the outer class within the inner class. It is protected so 
@@ -28,16 +31,16 @@ public class LinkedBinaryTree<T> extends AbstractBinaryTree<T> {
     }
 
     // Accessor Methods
-    public T getElement() { return this.element; }
+    public T getElement() { return this.data; }
     public Node<T> getParent() { return this.parent; }
     public Node<T> getLeft() { return this.left; }
     public Node<T> getRight() { return this.right; }
 
     // Update Methods
     public void setElement(T data) { this.data = data; }
-    public setParent(Node<T> parent) { this.parent = parent; }
-    public setLeft(Node<T> left) { this.left = left; }
-    public setRight(Node<T> right) { this.right = right; }
+    public void setParent(Node<T> parent) { this.parent = parent; }
+    public void setLeft(Node<T> left) { this.left = left; }
+    public void setRight(Node<T> right) { this.right = right; }
   }
 
   /** Factory function to create a new node storing element data */
@@ -55,11 +58,11 @@ public class LinkedBinaryTree<T> extends AbstractBinaryTree<T> {
   // Non-public Utility Method
   /** 
    * Validates the position and returns the node at the position. */
-  protected Node<T> validate(Positon<T> p) throws IllegalArgumentException {
+  protected Node<T> validate(Position<T> p) throws IllegalArgumentException {
     if (!(p instanceof Node))
       throw new IllegalArgumentException("Not a valid position type.");
     Node<T> node = (Node<T>)p; // safe cast
-    if (node.getParent() == null) // convention for defunct node
+    if (node.getParent() == node) // convention for defunct node
       throw new IllegalArgumentException("Position no longer in the tree.");
     return node;
   }
@@ -69,16 +72,22 @@ public class LinkedBinaryTree<T> extends AbstractBinaryTree<T> {
   public int size() { return this.size; }
 
   /** Returns the position of the root node (or null if tree is empty) */
-  Position<T> root() { return this.root; }
+  public Position<T> root() { return this.root; }
+
+  /** Returns the position of the parent node of p (or null if it has no parent is empty) */
+  public Position<T> parent(Position<T> p) {
+    Node<T> node = this.validate(p);
+    return node.getParent();
+  }
 
   /** Return p's left child's position (or null if no child exists) */
-  Position<T> left(Position<T> p) {
+  public Position<T> left(Position<T> p) {
     Node<T> node = this.validate(p);
     return node.getLeft();
   }
 
   /** Return p's right child's position (or null if no child exists) */
-  Position<T> right(Position<T> p) {
+  public Position<T> right(Position<T> p) {
     Node<T> node = this.validate(p);
     return node.getRight();
   }
@@ -115,9 +124,9 @@ public class LinkedBinaryTree<T> extends AbstractBinaryTree<T> {
   }
 
   /** Replaces the element at Position p with data and returns the replaced element */
-  public T set(Position<T> p, E data)throws IllegalArgumentException {
+  public T set(Position<T> p, T data)throws IllegalArgumentException {
     Node<T> node = validate(p);
-    E temp = node.getElement();
+    T temp = node.getElement();
     node.setElement(data);
     return temp;
   }
@@ -181,5 +190,22 @@ public class LinkedBinaryTree<T> extends AbstractBinaryTree<T> {
   /** Returns an iterator of the elements stored in the tree. */
   public Iterator<T> iterator() { 
     return new ElementIterator(); 
+  }
+
+  public static void main(String[] args) {
+    LinkedBinaryTree<String> tree = new LinkedBinaryTree<>();
+    LinkedBinaryTree<String> lia = new LinkedBinaryTree<>();
+    lia.addRoot("Grandma");
+    lia.addLeft(lia.root(), "Dad");
+    lia.addRight(lia.root(), "Uncle Left");
+    LinkedBinaryTree<String> lucian = new LinkedBinaryTree<>();
+    lucian.addRoot("Great Uncle");
+    lucian.addLeft(lucian.root(), "Aunt");
+    lucian.addRight(lucian.root(), "Uncle Right");
+    Position<String> oma = tree.addRoot("Great Grandma");
+    tree.attach(oma, lia, lucian);
+    Iterator<String> iterator = tree.iterator();
+    while(iterator.hasNext())
+      System.out.println(iterator.next());
   }
 }

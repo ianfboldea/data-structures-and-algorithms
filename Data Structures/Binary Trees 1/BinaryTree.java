@@ -7,7 +7,7 @@
 * @version 1.0
 * @since   May 23, 2020
 */
-public interface BinaryTree<T> implements Tree<T> {
+public interface BinaryTree<T> extends Tree<T> {
   /** Returns the Position of p's left child (or null if no child exists). */
   Position<T> left(Position<T> p) throws IllegalArgumentException;
   /** Returns the Position of p's right child (or null if no child exists). */
